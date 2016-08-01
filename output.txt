@@ -1,0 +1,75 @@
+Hello from Chess Translator!
+[Info       ]    ChessParser::ParseFile() opened file [..\\Data\\Lab01.chess] for reading.
+
+----------
+[Rla1    ] : White Rook   was placed at a1.
+[Nlb1    ] : White Knight was placed at b1.
+[Blc1    ] : White Bishop was placed at c1.
+[Kld1    ] : White King   was placed at d1.
+[Qle1    ] : White Queen  was placed at e1.
+[Blf1    ] : White Bishop was placed at f1.
+[Nlg1    ] : White Knight was placed at g1.
+[Rlh1    ] : White Rook   was placed at h1.
+[Pla2    ] : White Pawn   was placed at a2.
+[Plb2    ] : White Pawn   was placed at b2.
+[Plc2    ] : White Pawn   was placed at c2.
+[Pld2    ] : White Pawn   was placed at d2.
+[Ple2    ] : White Pawn   was placed at e2.
+[Plf2    ] : White Pawn   was placed at f2.
+[Plg2    ] : White Pawn   was placed at g2.
+[Plh2    ] : White Pawn   was placed at h2.
+[Rda8    ] : Black Rook   was placed at a8.
+[Ndb8    ] : Black Knight was placed at b8.
+[Bdc8    ] : Black Bishop was placed at c8.
+[Kdd8    ] : Black King   was placed at d8.
+[Qde8    ] : Black Queen  was placed at e8.
+[Bdf8    ] : Black Bishop was placed at f8.
+[Ndg8    ] : Black Knight was placed at g8.
+[Rdh8    ] : Black Rook   was placed at h8.
+[Pda7    ] : Black Pawn   was placed at a7.
+[Pdb7    ] : Black Pawn   was placed at b7.
+[Pdc7    ] : Black Pawn   was placed at c7.
+[Pdd7    ] : Black Pawn   was placed at d7.
+[Pde7    ] : Black Pawn   was placed at e7.
+[Pdf7    ] : Black Pawn   was placed at f7.
+[Pdg7    ] : Black Pawn   was placed at g7.
+[Pdh7    ] : Black Pawn   was placed at h7.
+[O-O     ] : White castles King side.
+[O-O-O   ] : Black castles Queen side.
+[O-O-O   ] : White castles Queen side.
+[O-O     ] : Black castles King side.
+[f2-f4   ] : White moves Pawn   at f2 to f4.
+[e7-e5   ] : Black moves Pawn   at e7 to e5.
+[f4xe5   ] : White moves Pawn   at f4 to e5, Capturing oponents piece.
+[d7-d6   ] : Black moves Pawn   at d7 to d6.
+[e5xd6   ] : White moves Pawn   at e5 to d6, Capturing oponents piece.
+[Bf8xd6  ] : Black moves Bishop at f8 to d6, Capturing oponents piece.
+[g2-g3   ] : White moves Pawn   at g2 to g3.
+[Qd8-g5  ] : Black moves Queen  at d8 to g5.
+[Ng1-f3  ] : White moves Knight at g1 to f3.
+[Qg5xg3+ ] : Black moves Queen  at g5 to g3, Capturing oponents piece. Check!
+[h2xg3   ] : White moves Pawn   at h2 to g3, Capturing oponents piece.
+[Bd6xg3# ] : Black moves Bishop at d6 to g3, Capturing oponents piece. Checkmate!
+[Warning    ]    Skipping [    Pdc9        // bad rank in placement]
+[Warning    ]    Skipping [    Plj7        // bad file in placement]
+[Warning    ]    Skipping [    Pbc4        // bad color in placement]
+[Warning    ]    Skipping [    Xda6        // bad piece in placement]
+[Warning    ]    Skipping [    O-O-    O-O  // castling error white]
+[O-O     ] : White castles King side.
+[Error      ]    Expected Black's response, got (O-)
+
+[Warning    ]    Skipping [    h2=g3		Bd6xg3#     // bad white move]
+[h2xg3   ] : White moves Pawn   at h2 to g3, Capturing oponents piece.
+[Error      ]    Expected Black's response, got (Bd6=g3#)
+
+[Error      ]    Missing move, only found (h2xg3)
+[Error      ]    Missing move, only found (h2xg3)
+----------
+
+Begin Log Message Count by Type
+   [Process    ]  = 3
+   [Info       ]  = 4
+   [Warning    ]  = 6
+   [Error      ]  = 4
+EndLog Message Count by Type
+
