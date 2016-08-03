@@ -5,6 +5,7 @@ public class Square {
 	private String space;
 	private Piece piece;
 	private boolean isOccupied;
+	private char value = '-';
 	
 	public Square(String space){
 		this.space = space;
@@ -16,7 +17,7 @@ public class Square {
 		return space;
 	}
 	
-	public void setSpace(){
+	public void setSpace(String space){
 		this.space = space;
 	}
 	
@@ -36,4 +37,7 @@ public class Square {
 		this.isOccupied = isOccupied;
 	}
 	
+	public char getValue(){
+		return value;
+	}
 }

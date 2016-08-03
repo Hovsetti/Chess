@@ -1,8 +1,6 @@
 package View;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class Board {
@@ -52,7 +50,12 @@ public class Board {
 		int arrayIndex = 0;
 		for(int j = 0; j < BOARD_SIZE/8; j++){
 			for(int w = 0; w < BOARD_SIZE/8; w++){
-				System.out.print(squares[arrayIndex].getPiece().getSymbol() + "\t");
+				Model.Piece piece = squares[arrayIndex].getPiece();
+				if(piece == null){
+					System.out.print(squares[arrayIndex].getValue() + "\t"); 
+				}else{
+					System.out.print(squares[arrayIndex].getPiece().getSymbol() + "\t");
+				}
 				arrayIndex++;
 			}
 			System.out.print("\n");

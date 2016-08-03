@@ -1,7 +1,6 @@
 package Controller;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,14 +12,12 @@ import java.util.regex.Pattern;
 
 public class FileIo {
 
-	private File file;
 	private InputStream in;
 	private ArrayList<String> actions;
 	private View.Board board;
 	private int pieceArrayLocation = 0;
 
 	public FileIo(String fileName){
-		file = new File(fileName);
 		try {
 			in = new FileInputStream(fileName);
 		} catch (FileNotFoundException e) {
@@ -211,6 +208,7 @@ public class FileIo {
 		private void assignSquareValues(String space, char color, char symbol){
 			Model.Piece piece = board.getPieces()[pieceArrayLocation];
 			Model.Square[] squares = board.getSquares();
+			piece = setStartingPiece(symbol);
 			for(int j = 0; j < squares.length; j++){
 				boolean hasPiece = squares[j].getIsOccupied();
 				if(squares[j].getSpace().equals(space)){
@@ -219,17 +217,38 @@ public class FileIo {
 						piece.setSymbol(Character.toLowerCase(symbol));
 					}else{
 						piece.setColor("white");
-						piece.setSymbol(symbol);
+						piece.setSymbol(Character.toUpperCase(symbol));
 					}
 					squares[j].setPiece(piece);
 					squares[j].setIsOccupied(true);
 					pieceArrayLocation++;
 					break;
-				}else if(!hasPiece){
-					Model.Piece emptyPiece = new Model.Piece("unocupied space", '-');
-					squares[j].setPiece(emptyPiece);
 				}
 			}
-			
+		}
+		
+		private Model.Piece setStartingPiece(char symbol){
+			Model.Piece piece = new Model.Piece("unocupied space", '-');
+			switch(symbol){
+			case 'Q':
+				piece = new Model.Queen("unocupied space", '-');
+				break;
+			case 'K':
+				piece = new Model.King("unocupied space", '-');
+				break;
+			case 'P':
+				piece = new Model.Pawn("unocupied space", '-');
+				break;
+			case 'R':
+				piece = new Model.Rook("unocupied space", '-');
+				break;
+			case 'N':
+				piece = new Model.Knight("unocupied space", '-');
+				break;
+			case 'B':
+				piece = new Model.Bishop("unocupied space", '-');
+				break;
+			}
+			return piece;
 		}
 }

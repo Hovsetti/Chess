@@ -1,17 +1,16 @@
 package Model;
 
+import java.util.ArrayList;
+
 public class Piece {
-	private String color;
-	private char symbol;
+	protected String color;
+	protected char symbol;
+	protected boolean hasMoved;
 	
 	public Piece(String color, char symbol){
 		this.color = color;
 		this.symbol = symbol;
-	}
-	
-	public String move(String startingPosition){
-		String move = startingPosition;
-		return move;
+		hasMoved = false;
 	}
 	
 	public String getColor() {
@@ -29,5 +28,10 @@ public class Piece {
 	public void setSymbol(char symbol) {
 		this.symbol = symbol;
 	}
-
+	
+	public ArrayList<String> getPossibleMoves(String startingLocation, Square[] squares){
+		ArrayList<String> possibleMoves = new ArrayList<String>();
+		
+		return possibleMoves;
+	}
 }
