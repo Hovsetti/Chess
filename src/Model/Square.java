@@ -4,13 +4,11 @@ public class Square {
 	
 	private String space;
 	private Piece piece;
-	private boolean isOccupied;
-	private char value = '-';
+	private boolean isOccupied = false;
 	
 	public Square(String space){
 		this.space = space;
-		piece = null;
-		isOccupied = false;
+		piece = new Piece("unoccupied space", '-');
 	}
 	
 	public String getSpace() {
@@ -35,9 +33,5 @@ public class Square {
 	
 	public void setIsOccupied(boolean isOccupied) {
 		this.isOccupied = isOccupied;
-	}
-	
-	public char getValue(){
-		return value;
 	}
 }

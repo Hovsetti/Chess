@@ -19,7 +19,7 @@ public class Board {
 	
 	private void populateSquareArray() {
 		char file;
-		int rank = 1;
+		int rank = 8;
 		int arrayIndex = 0; 
 		for(int j = 0; j < BOARD_SIZE/8; j++){
 			file = 'a';
@@ -28,7 +28,7 @@ public class Board {
 				arrayIndex++;
 				file++;
 			}
-			rank++;
+			rank--;
 		}
 	}
 	
@@ -50,12 +50,7 @@ public class Board {
 		int arrayIndex = 0;
 		for(int j = 0; j < BOARD_SIZE/8; j++){
 			for(int w = 0; w < BOARD_SIZE/8; w++){
-				Model.Piece piece = squares[arrayIndex].getPiece();
-				if(piece == null){
-					System.out.print(squares[arrayIndex].getValue() + "\t"); 
-				}else{
-					System.out.print(squares[arrayIndex].getPiece().getSymbol() + "\t");
-				}
+				System.out.print(squares[arrayIndex].getPiece().getSymbol() + "\t");
 				arrayIndex++;
 			}
 			System.out.print("\n");
@@ -68,5 +63,33 @@ public class Board {
 	
 	public Model.Piece[] getPieces(){
 		return pieces;
+	}
+	
+	public boolean attemptMove(String startPosition, String endPosition){
+		boolean successfulMove = false;
+		for(int j = 0; j < squares.length && !successfulMove; j++){
+			if(squares[j].getSpace().equals(startPosition)){
+				if(squares[j].getPiece().checkMove(startPosition, endPosition, squares)){
+					squares[j] = movePiece(endPosition, squares[j]);
+					//TODO switch turn
+					successfulMove = true;
+				}
+			}
+		}
+		return successfulMove;
+	}
+	
+	private Model.Square movePiece(String endPosition, Model.Square startingSquare){
+		for(int j = 0; j<squares.length; j++){
+			if(squares[j].getSpace().equals(endPosition)){
+				squares[j].setPiece(startingSquare.getPiece());
+				squares[j].getPiece().clearPossibleMoves();
+				squares[j].setIsOccupied(true);
+				squares[j].getPiece().setHasMoved(true);
+				startingSquare.setPiece(new Model.Piece("empty space", '-'));
+				startingSquare.setIsOccupied(false);
+			}
+		}
+		return startingSquare;
 	}
 }

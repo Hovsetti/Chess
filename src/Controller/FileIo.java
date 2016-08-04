@@ -60,15 +60,18 @@ public class FileIo {
 				pattern = Pattern.compile(movePattern);
 				match = pattern.matcher(line);
 				if(match.matches() && !matched){
+					board.drawBoard();
 					line = match.group(1);
 					matched = true;
-					actions.add(movePiece(line));
+					//actions.add(movePiece(line));
+					System.out.println(movePiece(line));
 				}
 				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		board.drawBoard();
 	}
 
 		private String placePiece(String command){
@@ -118,6 +121,9 @@ public class FileIo {
 				output += "Piece from " + startingPlacement + " was moved to " + finalPlacement + " and took a piece";
 			}else{
 				output += "Piece from " + startingPlacement + " was moved to "+ finalPlacement;
+			}
+			if(!board.attemptMove(startingPlacement, finalPlacement)){
+				output = "INVALID MOVE FOROM " + startingPlacement + " TO "+ finalPlacement;
 			}
 			return output;
 		}
@@ -205,12 +211,15 @@ public class FileIo {
 			return board;
 		}
 		
+		
+		
+		
 		private void assignSquareValues(String space, char color, char symbol){
+			boolean keepRunning = true;
 			Model.Piece piece = board.getPieces()[pieceArrayLocation];
 			Model.Square[] squares = board.getSquares();
 			piece = setStartingPiece(symbol);
-			for(int j = 0; j < squares.length; j++){
-				boolean hasPiece = squares[j].getIsOccupied();
+			for(int j = 0; j < squares.length && keepRunning; j++){
 				if(squares[j].getSpace().equals(space)){
 					if(color == 'd'){
 						piece.setColor("black");
@@ -222,7 +231,7 @@ public class FileIo {
 					squares[j].setPiece(piece);
 					squares[j].setIsOccupied(true);
 					pieceArrayLocation++;
-					break;
+					keepRunning = false;
 				}
 			}
 		}
