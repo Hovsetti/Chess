@@ -117,13 +117,14 @@ public class FileIo {
 			String output = "[" + command + "] = ";
 			String startingPlacement = completePlacement(command.charAt(0), command.charAt(1));
 			String finalPlacement = completePlacement(command.charAt(3), command.charAt(4));
-			if(command.length() == 6){
-				output += "Piece from " + startingPlacement + " was moved to " + finalPlacement + " and took a piece";
-			}else{
-				output += "Piece from " + startingPlacement + " was moved to "+ finalPlacement;
-			}
 			if(!board.attemptMove(startingPlacement, finalPlacement)){
 				output = "INVALID MOVE FOROM " + startingPlacement + " TO "+ finalPlacement;
+			}else{
+				if(board.getPotentialMove()){
+					output += "Piece from " + startingPlacement + " was moved to " + finalPlacement + " and took a piece";
+				}else{
+					output += "Piece from " + startingPlacement + " was moved to "+ finalPlacement;
+				}
 			}
 			return output;
 		}
@@ -216,9 +217,8 @@ public class FileIo {
 		
 		private void assignSquareValues(String space, char color, char symbol){
 			boolean keepRunning = true;
-			Model.Piece piece = board.getPieces()[pieceArrayLocation];
 			Model.Square[] squares = board.getSquares();
-			piece = setStartingPiece(symbol);
+			Model.Piece piece = setStartingPiece(symbol);
 			for(int j = 0; j < squares.length && keepRunning; j++){
 				if(squares[j].getSpace().equals(space)){
 					if(color == 'd'){

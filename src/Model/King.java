@@ -10,19 +10,8 @@ public class King extends Piece{
 
 	public ArrayList<String> getPossibleMoves(String startingLocation, Square[] squares){
 		
-		int boardLocation = -1;
+		int boardLocation = findPieceLocation(startingLocation, squares);
 		
-		for(int j = 0; j < squares.length; j++){
-			if(squares[j].getSpace().equals(startingLocation)){
-				boardLocation = j;
-			}
-		}
-
-		if(boardLocation == -1){
-			System.out.println("bad boardLocation in getPossibleMoves for the piece in " + startingLocation);
-			System.exit(1);
-		}
-
 		int modBoardLocation = boardLocation%MOD_VALUE;
 		
 		int modifiedIndex = boardLocation-MOVE_ONE;

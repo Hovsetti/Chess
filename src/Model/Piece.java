@@ -74,4 +74,21 @@ public class Piece {
 	public void setHasMoved(boolean moved){
 		hasMoved = moved;
 	}
+	
+	protected int findPieceLocation(String startingLocation, Square[] squares){
+		int boardLocation = -1;
+		
+		for(int j = 0; j < squares.length && boardLocation == -1; j++){
+			if(squares[j].getSpace().equals(startingLocation)){
+				boardLocation = j;
+			}
+		}
+
+		if(boardLocation == -1){
+			System.out.println("bad boardLocation in getPossibleMoves for the piece in " + startingLocation);
+			System.exit(1);
+		}
+		
+		return boardLocation;
+	}
 }

@@ -39,3 +39,16 @@ a4 a3
 a3 a2
 a3 b2
 b2 a1
+c1 b2
+b2 g7
+g7 c3
+b1 c3
+b1 a3
+c3 b2
+a3 b1
+b1 c3
+c3 a1
+c3 d5
+d5 c7
+g1 f3
+f3 e1

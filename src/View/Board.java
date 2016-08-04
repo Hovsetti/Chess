@@ -8,13 +8,11 @@ public class Board {
 	private InputStream inputStream;
 	private File file;
 	private final int BOARD_SIZE = 64;
-	private final int NUMBER_OF_PIECES = 32;
 	private Model.Square[] squares = new Model.Square[BOARD_SIZE];
-	private Model.Piece[] pieces = new Model.Piece[NUMBER_OF_PIECES];
+	private boolean potentialMove;
 	
 	public Board(){
 		populateSquareArray();
-		populatePieceArray();
 	}
 	
 	private void populateSquareArray() {
@@ -29,12 +27,6 @@ public class Board {
 				file++;
 			}
 			rank--;
-		}
-	}
-	
-	private void populatePieceArray() {
-		for(int j = 0; j < NUMBER_OF_PIECES; j++){
-			pieces[j] = new Model.Piece("unocupied space", '-');
 		}
 	}
 
@@ -61,10 +53,6 @@ public class Board {
 		return squares;
 	}
 	
-	public Model.Piece[] getPieces(){
-		return pieces;
-	}
-	
 	public boolean attemptMove(String startPosition, String endPosition){
 		boolean successfulMove = false;
 		for(int j = 0; j < squares.length && !successfulMove; j++){
@@ -82,6 +70,7 @@ public class Board {
 	private Model.Square movePiece(String endPosition, Model.Square startingSquare){
 		for(int j = 0; j<squares.length; j++){
 			if(squares[j].getSpace().equals(endPosition)){
+				potentialMove = squares[j].getIsOccupied();
 				squares[j].setPiece(startingSquare.getPiece());
 				squares[j].getPiece().clearPossibleMoves();
 				squares[j].setIsOccupied(true);
@@ -91,5 +80,9 @@ public class Board {
 			}
 		}
 		return startingSquare;
+	}
+	
+	public boolean getPotentialMove(){
+		return potentialMove;
 	}
 }
