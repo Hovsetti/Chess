@@ -3,14 +3,15 @@ package Model;
 import java.util.ArrayList;
 
 public class Piece {
+	protected final int ROW_SIZE = 8;
 	protected String color;
 	protected char symbol;
+	protected boolean canJump = false;
+	protected boolean hasSpecialAttackMove = false;
 	protected boolean hasMoved = false;
-	protected ArrayList<String> possibleMoves = new ArrayList<String>();
+	protected ArrayList<Integer> possibleMoves = new ArrayList<Integer>();
+	protected int currentArrayLocation;
 	protected boolean keepRunning = true;
-	protected final int MOD_VALUE = 8;
-	protected final int BOARD_MIN = -1;
-	protected final int BOARD_MAX = 64;
 	protected final int MOVE_SEVEN = 7;
 	protected final int MOVE_NINE = 9;
 	protected final int MOVE_EIGHT = 8;
@@ -37,34 +38,8 @@ public class Piece {
 		this.symbol = symbol;
 	}
 
-	public ArrayList<String> getPossibleMoves(String startingLocation, Square[] squares){
-		ArrayList<String> possibleMoves = new ArrayList<String>();
-
+	public ArrayList<Integer> getPossibleMoves(){
 		return possibleMoves;
-	}
-
-	protected void addPossibleMoves(int index, Square[] squares){
-		if(!squares[index].getIsOccupied()){
-			possibleMoves.add(squares[index].getSpace());
-		}else{
-			if(squares[index].getPiece().getColor().equals(this.color)){
-				keepRunning = false;
-			}else{
-				possibleMoves.add(squares[index].getSpace());
-				keepRunning = false;
-			}
-		}
-	}
-
-	public boolean checkMove(String startPosition, String endPosition, Square[] squares){
-		boolean validMove = false;
-		getPossibleMoves(startPosition, squares);
-		for(int p = 0; p < possibleMoves.size() && !validMove; p++){
-			if(possibleMoves.get(p).equals(endPosition)){
-				validMove = true;
-			}
-		}
-		return validMove;
 	}
 	
 	public void clearPossibleMoves(){
@@ -75,20 +50,22 @@ public class Piece {
 		hasMoved = moved;
 	}
 	
-	protected int findPieceLocation(String startingLocation, Square[] squares){
-		int boardLocation = -1;
-		
-		for(int j = 0; j < squares.length && boardLocation == -1; j++){
-			if(squares[j].getSpace().equals(startingLocation)){
-				boardLocation = j;
-			}
-		}
+	public int getCurrentLocation() {
+		return currentArrayLocation;
+	}
 
-		if(boardLocation == -1){
-			System.out.println("bad boardLocation in getPossibleMoves for the piece in " + startingLocation);
-			System.exit(1);
-		}
-		
-		return boardLocation;
+	public void setCurrentLocation(int currentLocation) {
+		this.currentArrayLocation = currentLocation;
+	}
+	
+	public void setPossibleMoves(){
+	}
+	
+	public boolean getCanJump(){
+		return canJump;
+	}
+	
+	public boolean getHasSpecialAttackMove(){
+		return hasSpecialAttackMove;
 	}
 }

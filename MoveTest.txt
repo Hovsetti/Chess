@@ -30,7 +30,6 @@ Rla1
     Pdf7
     Pdg7
     Pdh7
-
 a7 a5
 a5 a6
 a5 a3
@@ -52,3 +51,10 @@ c3 d5
 d5 c7
 g1 f3
 f3 e1
+e2 e3
+e3 e4
+e4 e5
+e5 e6
+e6 e7
+e6 d7
+d7 e8

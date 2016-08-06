@@ -15,7 +15,6 @@ public class FileIo {
 	private InputStream in;
 	private ArrayList<String> actions;
 	private View.Board board;
-	private int pieceArrayLocation = 0;
 
 	public FileIo(String fileName){
 		try {
@@ -118,7 +117,7 @@ public class FileIo {
 			String startingPlacement = completePlacement(command.charAt(0), command.charAt(1));
 			String finalPlacement = completePlacement(command.charAt(3), command.charAt(4));
 			if(!board.attemptMove(startingPlacement, finalPlacement)){
-				output = "INVALID MOVE FOROM " + startingPlacement + " TO "+ finalPlacement;
+				output = "INVALID MOVE FROM " + startingPlacement + " TO "+ finalPlacement;
 			}else{
 				if(board.getPotentialMove()){
 					output += "Piece from " + startingPlacement + " was moved to " + finalPlacement + " and took a piece";
@@ -228,9 +227,9 @@ public class FileIo {
 						piece.setColor("white");
 						piece.setSymbol(Character.toUpperCase(symbol));
 					}
+					piece.setCurrentLocation(j);
 					squares[j].setPiece(piece);
 					squares[j].setIsOccupied(true);
-					pieceArrayLocation++;
 					keepRunning = false;
 				}
 			}
