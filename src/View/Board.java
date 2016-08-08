@@ -9,12 +9,15 @@ public class Board {
 	private InputStream inputStream;
 	private File file;
 	private final int BOARD_SIZE = 64;
+	private Controller.TurnHandler turnHandler = new Controller.TurnHandler();
+	private String currentPlayer;
 	private Model.Square[] squares = new Model.Square[BOARD_SIZE];
 	private boolean potentialMove;
 	private Controller.CheckMove checkMove = new Controller.CheckMove(squares);
 
 	public Board(){
 		populateSquareArray();
+		currentPlayer = turnHandler.getCurrentPlayer();
 	}
 
 	private void populateSquareArray() {
@@ -62,7 +65,7 @@ public class Board {
 				if(squares[j].getSpace().equals(startPosition)){
 					if(checkMoves(squares[j].getPiece(), endPosition)){
 						squares[j] = movePiece(endPosition, squares[j]);
-						//TODO switch turn
+						currentPlayer = turnHandler.changTurn();
 						successfulMove = true;
 					}
 				}
@@ -91,12 +94,14 @@ public class Board {
 
 	public boolean checkMoves(Model.Piece piece, String endPosition){
 		boolean validMove = false;
-		piece.setPossibleMoves();
-		checkMove.checkPossibleMoves(piece);
-		ArrayList<String> movesToCheck = checkMove.getPossibleMoves();
-		for(int p = 0; p < movesToCheck.size() && !validMove; p++){
-			if(movesToCheck.get(p).equals(endPosition)){
-				validMove = true;
+		if(piece.getColor().equals(currentPlayer)){
+			piece.setPossibleMoves();
+			checkMove.checkPossibleMoves(piece);
+			ArrayList<String> movesToCheck = checkMove.getPossibleMoves();
+			for(int p = 0; p < movesToCheck.size() && !validMove; p++){
+				if(movesToCheck.get(p).equals(endPosition)){
+					validMove = true;
+				}
 			}
 		}
 		return validMove;

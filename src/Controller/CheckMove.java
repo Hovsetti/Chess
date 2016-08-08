@@ -6,6 +6,7 @@ public class CheckMove {
 
 	private ArrayList<String> possibleMoves = new ArrayList<String>();
 	private ArrayList<Integer> movesOnBoard = new ArrayList<Integer>();
+	private TurnHandler turnHandler = new TurnHandler();
 	private boolean keepRunning = true;
 	private Model.Square[] squares;
 	private final int MOD_VALUE = 8;
