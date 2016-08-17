@@ -4,6 +4,8 @@ public class King extends Piece{
 
 	public King(String color, char symbol) {
 		super(color, symbol);
+		canMoveDiagonalEveryTurn = true;
+		canMoveStraightEveryTurn = true;
 	}
 
 	public void setPossibleMoves(){

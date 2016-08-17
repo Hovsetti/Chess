@@ -211,9 +211,6 @@ public class FileIo {
 			return board;
 		}
 		
-		
-		
-		
 		private void assignSquareValues(String space, char color, char symbol){
 			boolean keepRunning = true;
 			Model.Square[] squares = board.getSquares();
@@ -233,6 +230,7 @@ public class FileIo {
 					keepRunning = false;
 				}
 			}
+			board.setSquares(squares);
 		}
 		
 		private Model.Piece setStartingPiece(char symbol){

@@ -16,7 +16,9 @@ public class Piece {
 	protected final int MOVE_NINE = 9;
 	protected final int MOVE_EIGHT = 8;
 	protected final int MOVE_ONE = 1;
-
+	protected boolean canMoveDiagonalEveryTurn = false;
+	protected boolean canMoveStraightEveryTurn = false;
+	
 	public Piece(String color, char symbol){
 		this.color = color;
 		this.symbol = symbol;
@@ -67,5 +69,13 @@ public class Piece {
 	
 	public boolean getHasSpecialAttackMove(){
 		return hasSpecialAttackMove;
+	}
+	
+	public boolean getCanMoveDiagonalEveryTurn(){
+		return canMoveDiagonalEveryTurn;
+	}
+	
+	public boolean getCanMoveStraightEveryTurn(){
+		return canMoveStraightEveryTurn;
 	}
 }

@@ -4,6 +4,7 @@ public class Bishop extends Piece{
 
 	public Bishop(String color, char symbol) {
 		super(color, symbol);
+		canMoveDiagonalEveryTurn = true;
 	}
 
 	public void setPossibleMoves(){

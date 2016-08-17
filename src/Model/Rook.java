@@ -4,6 +4,7 @@ public class Rook extends Piece{
 
 	public Rook(String color, char symbol) {
 		super(color, symbol);
+		canMoveStraightEveryTurn = true;
 	}
 
 	public void setPossibleMoves(){

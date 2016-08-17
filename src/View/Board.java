@@ -13,7 +13,7 @@ public class Board {
 	private String currentPlayer;
 	private Model.Square[] squares = new Model.Square[BOARD_SIZE];
 	private boolean potentialMove;
-	private Controller.CheckMove checkMove = new Controller.CheckMove(squares);
+	private Controller.CheckMove checkMove;
 
 	public Board(){
 		populateSquareArray();
@@ -60,17 +60,22 @@ public class Board {
 
 	public boolean attemptMove(String startPosition, String endPosition){
 		boolean successfulMove = false;
+		checkMove = new Controller.CheckMove(squares);
 		for(int j = 0; j < squares.length && !successfulMove; j++){
 			if(squares[j].getIsOccupied()){
 				if(squares[j].getSpace().equals(startPosition)){
 					if(checkMoves(squares[j].getPiece(), endPosition)){
 						squares[j] = movePiece(endPosition, squares[j]);
 						currentPlayer = turnHandler.changTurn();
+						if(checkMove.isCheck('k', turnHandler.getCurrentPlayer())){
+							System.out.println(turnHandler.getCurrentPlayer() + " player's King is in check");
+						}else{
+							System.out.println(turnHandler.getCurrentPlayer() + " player's King is safe");
+						}
 						successfulMove = true;
 					}
 				}
 			}
-			squares[j].getPiece().clearPossibleMoves();
 		}
 		return successfulMove;
 	}
@@ -84,7 +89,7 @@ public class Board {
 				squares[j].getPiece().setCurrentLocation(j);
 				squares[j].setIsOccupied(true);
 				squares[j].getPiece().setHasMoved(true);
-				checkMove.clearPossibleMoves();
+				checkMove.clearFinalMoves();
 				startingSquare.setPiece(new Model.Piece("empty space", '-'));
 				startingSquare.setIsOccupied(false);
 			}
@@ -97,7 +102,7 @@ public class Board {
 		if(piece.getColor().equals(currentPlayer)){
 			piece.setPossibleMoves();
 			checkMove.checkPossibleMoves(piece);
-			ArrayList<String> movesToCheck = checkMove.getPossibleMoves();
+			ArrayList<String> movesToCheck = checkMove.getFinalMoves();
 			for(int p = 0; p < movesToCheck.size() && !validMove; p++){
 				if(movesToCheck.get(p).equals(endPosition)){
 					validMove = true;
@@ -109,5 +114,9 @@ public class Board {
 
 	public boolean getPotentialMove(){
 		return potentialMove;
+	}
+	
+	public void setSquares(Model.Square[] squares){
+		this.squares = squares;
 	}
 }

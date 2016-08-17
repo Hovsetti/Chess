@@ -4,6 +4,8 @@ public class Queen extends Piece{
 
 	public Queen(String color, char symbol) {
 		super(color, symbol);
+		canMoveDiagonalEveryTurn = true;
+		canMoveStraightEveryTurn = true;
 	}
 	
 	public void setPossibleMoves(){
