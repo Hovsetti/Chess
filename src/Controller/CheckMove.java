@@ -32,7 +32,7 @@ public class CheckMove {
 		removeImpossibleMoves(piece, possibleMoves);
 		removeCheckViolation(piece);
 	}
-	
+
 	public void checkSecondaryPieceMoves(Model.Piece piece){
 		checkingMoves.clear();
 		movesOnBoard.clear();
@@ -49,7 +49,7 @@ public class CheckMove {
 	public ArrayList<String> getFinalMoves(){
 		return finalMoves;
 	}
-	
+
 	public void clearFinalMoves(){
 		finalMoves.clear();
 	}
@@ -78,30 +78,33 @@ public class CheckMove {
 		if(isCheck('k', piece.getColor())){
 
 		}else{
-			if(piece.getSymbol()!='k'|| piece.getSymbol()!='K'){
-				squares[piece.getCurrentLocation()].setPiece(new Model.Piece("unoccupied space", '-'));
-				squares[piece.getCurrentLocation()].setIsOccupied(false);
-				if(isCheck('k', piece.getColor())){
-					squares[piece.getCurrentLocation()].setPiece(piece);
-					squares[piece.getCurrentLocation()].setIsOccupied(true);
-					hasPathToPiece(findCheckPeice('k', piece.getColor()).getCurrentLocation(), piece.getCurrentLocation(), piece);
-					for(int j = 0; j < MOD_VALUE; j++){
-						for(int s = 0; s < possibleMoves.size(); s++){
-							if(possibleMoves.get(s) == (piece.getCurrentLocation()+(checkOffset*j))){
-								finalMoves.add(squares[possibleMoves.get(s)].getSpace());
-							}
-							if(possibleMoves.get(s) == (piece.getCurrentLocation()-(checkOffset*j))){
-								finalMoves.add(squares[possibleMoves.get(s)].getSpace());
-							}
+			if(piece.getSymbol()=='k' || piece.getSymbol()=='K'){
+				for(int j = 0; j < possibleMoves.size(); j++){
+					finalMoves.add(squares[possibleMoves.get(j)].getSpace());
+				}
+			}
+			squares[piece.getCurrentLocation()].setPiece(new Model.Piece("unoccupied space", '-'));
+			squares[piece.getCurrentLocation()].setIsOccupied(false);
+			if(isCheck('k', piece.getColor())){
+				squares[piece.getCurrentLocation()].setPiece(piece);
+				squares[piece.getCurrentLocation()].setIsOccupied(true);
+				hasPathToPiece(findCheckPeice('k', piece.getColor()).getCurrentLocation(), piece.getCurrentLocation(), piece);
+				for(int j = 0; j < MOD_VALUE; j++){
+					for(int s = 0; s < possibleMoves.size(); s++){
+						if(possibleMoves.get(s) == (piece.getCurrentLocation()+(checkOffset*j))){
+							finalMoves.add(squares[possibleMoves.get(s)].getSpace());
+						}
+						if(possibleMoves.get(s) == (piece.getCurrentLocation()-(checkOffset*j))){
+							finalMoves.add(squares[possibleMoves.get(s)].getSpace());
 						}
 					}
+				}
 
-				}else{
-					squares[piece.getCurrentLocation()].setPiece(piece);
-					squares[piece.getCurrentLocation()].setIsOccupied(true);
-					for(int j = 0; j < possibleMoves.size(); j++){
-						finalMoves.add(squares[possibleMoves.get(j)].getSpace());
-					}
+			}else{
+				squares[piece.getCurrentLocation()].setPiece(piece);
+				squares[piece.getCurrentLocation()].setIsOccupied(true);
+				for(int j = 0; j < possibleMoves.size(); j++){
+					finalMoves.add(squares[possibleMoves.get(j)].getSpace());
 				}
 			}
 		}
@@ -160,14 +163,14 @@ public class CheckMove {
 		boolean isStraightPath = false;
 		int offset;
 		if(squareLocation%MOD_VALUE == pieceLocation%MOD_VALUE){
-			if(squareLocation > pieceLocation){
-				offset = -8;
-				checkOffset = offset;
-			}else{
+			offset = -8;
+			checkOffset = offset;
+			isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
+			if(!isStraightPath){
 				offset = 8;
 				checkOffset = offset;
+				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
-			isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 		}else if(Math.floor(pieceLocation/8) == Math.floor(squareLocation/8)){
 			if(squareLocation > pieceLocation){
 				offset = -1;
@@ -185,6 +188,9 @@ public class CheckMove {
 
 	private boolean checkTruePath(int peiceLocation, int squareLocation, int offset){
 		boolean isTruePath = true;
+		if(squareLocation == 9 && offset == 7){
+			System.out.println(squareLocation%MOD_VALUE + " < " +  peiceLocation%MOD_VALUE);
+		}
 		if(offset==-9 && squareLocation%MOD_VALUE < peiceLocation%MOD_VALUE){
 			isTruePath = false;
 		}else if(offset==9 && squareLocation%MOD_VALUE>peiceLocation%MOD_VALUE){
@@ -193,10 +199,18 @@ public class CheckMove {
 			isTruePath = false;
 		}else if(offset==7 && squareLocation%MOD_VALUE < peiceLocation%MOD_VALUE){
 			isTruePath = false;
+		}else if(offset==-7 && Math.floor(squareLocation/MOD_VALUE) == Math.floor(peiceLocation/MOD_VALUE)){
+			isTruePath = false;
+		}else if(offset==7 && Math.floor(squareLocation/MOD_VALUE) == Math.floor(peiceLocation/MOD_VALUE)){
+			isTruePath = false;
 		}else if(offset==1 && Math.floor(squareLocation/MOD_VALUE) != Math.floor(peiceLocation/MOD_VALUE)){
 			isTruePath = false;
 		}else if(offset==-1 && Math.floor(squareLocation/MOD_VALUE) != Math.floor(peiceLocation/MOD_VALUE)){
 			isTruePath = false;
+		}else if(squares[peiceLocation].getPiece().getSymbol() == 'k' || squares[peiceLocation].getPiece().getSymbol() == 'K'){
+			if((peiceLocation%MOD_VALUE)+(squareLocation%MOD_VALUE)==7){
+				isTruePath = false;
+			}
 		}
 		int checkSquare = squareLocation+offset;
 		while(checkSquare != peiceLocation && isTruePath){
@@ -279,9 +293,11 @@ public class CheckMove {
 	private boolean checkHorizontalCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 1;
+		checkOffset = offset;
 		isCheck = checkHorizontalForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -1; 
+			checkOffset = offset;
 			isCheck = checkHorizontalForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -319,9 +335,11 @@ public class CheckMove {
 	private boolean checkVerticalCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 8;
+		checkOffset = offset;
 		isCheck = checkVerticalForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -8; 
+			checkOffset = offset;
 			isCheck = checkVerticalForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -357,9 +375,11 @@ public class CheckMove {
 	private boolean checkDiagonalRightCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 9;
+		checkOffset = offset;
 		isCheck = checkDiagonalRightForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -7; 
+			checkOffset = offset;
 			isCheck = checkDiagonalRightForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -396,9 +416,11 @@ public class CheckMove {
 	private boolean checkDiagonalLeftCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 7;
+		checkOffset = offset;
 		isCheck = checkDiagonalLeftForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -9; 
+			checkOffset = offset;
 			isCheck = checkDiagonalLeftForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -435,33 +457,41 @@ public class CheckMove {
 	private boolean checkCanJumpCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 6;
+		checkOffset = offset;
 		isCheck = checkCanJumpForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -6; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 10; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -10; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 15; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -15; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 17; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -17; 
+			checkOffset = offset;
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		return isCheck;

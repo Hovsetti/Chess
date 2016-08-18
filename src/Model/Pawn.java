@@ -5,6 +5,8 @@ public class Pawn extends Piece{
 	public Pawn(String color, char symbol) {
 		super(color, symbol);
 		hasSpecialAttackMove = true;
+		canMoveDiagonalEveryTurn = true;
+		canMoveStraightEveryTurn = true;
 	}
 	
 	public void setPossibleMoves(){
