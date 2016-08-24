@@ -2,6 +2,8 @@ package Controller;
 
 import java.util.ArrayList;
 
+import javafx.scene.image.Image;
+
 public class CheckMove {
 
 	private ArrayList<Integer> possibleMoves = new ArrayList<Integer>();
@@ -13,7 +15,8 @@ public class CheckMove {
 	private final int MOD_VALUE = 8;
 	private final int BOARD_MIN = -1;
 	private final int BOARD_MAX = 64;
-	private int checkOffset;
+	private static final int SCREEN_WIDTH = 512;
+	private static final int SCREEN_HEIGHT = 512;
 
 	public CheckMove(Model.Square[] squares){
 		this.squares = squares;
@@ -75,39 +78,64 @@ public class CheckMove {
 	}
 
 	private void removeCheckViolation(Model.Piece piece){
-		if(isCheck('k', piece.getColor())){
-
-		}else{
-			if(piece.getSymbol()=='k' || piece.getSymbol()=='K'){
-				for(int j = 0; j < possibleMoves.size(); j++){
-					finalMoves.add(squares[possibleMoves.get(j)].getSpace());
-				}
-			}
+		for(int j = 0; j < possibleMoves.size(); j++){
+			Model.Piece startPiece = piece;
+			int startLocation = piece.getCurrentLocation();
+			Model.Piece secondPiece = squares[possibleMoves.get(j)].getPiece();
 			squares[piece.getCurrentLocation()].setPiece(new Model.Piece("unoccupied space", '-'));
 			squares[piece.getCurrentLocation()].setIsOccupied(false);
-			if(isCheck('k', piece.getColor())){
-				squares[piece.getCurrentLocation()].setPiece(piece);
-				squares[piece.getCurrentLocation()].setIsOccupied(true);
-				hasPathToPiece(findCheckPeice('k', piece.getColor()).getCurrentLocation(), piece.getCurrentLocation(), piece);
-				for(int j = 0; j < MOD_VALUE; j++){
-					for(int s = 0; s < possibleMoves.size(); s++){
-						if(possibleMoves.get(s) == (piece.getCurrentLocation()+(checkOffset*j))){
-							finalMoves.add(squares[possibleMoves.get(s)].getSpace());
-						}
-						if(possibleMoves.get(s) == (piece.getCurrentLocation()-(checkOffset*j))){
-							finalMoves.add(squares[possibleMoves.get(s)].getSpace());
-						}
-					}
-				}
-
+			squares[possibleMoves.get(j)].setPiece(startPiece);
+			squares[possibleMoves.get(j)].setIsOccupied(true);
+			piece.setCurrentLocation(possibleMoves.get(j));
+			if(!isCheck('k', piece.getColor())){
+				finalMoves.add(squares[possibleMoves.get(j)].getSpace());
+			}
+			squares[startLocation].setPiece(startPiece);
+			squares[startLocation].setIsOccupied(true);
+			piece.setCurrentLocation(startLocation);
+			squares[possibleMoves.get(j)].setPiece(secondPiece);
+			if(secondPiece.getColor().equals("unoccupied space")){
+				squares[possibleMoves.get(j)].setIsOccupied(false);
 			}else{
-				squares[piece.getCurrentLocation()].setPiece(piece);
-				squares[piece.getCurrentLocation()].setIsOccupied(true);
-				for(int j = 0; j < possibleMoves.size(); j++){
-					finalMoves.add(squares[possibleMoves.get(j)].getSpace());
+				squares[possibleMoves.get(j)].setIsOccupied(true);
+			}
+		} 
+	}
+	
+	public boolean isCheckmate(String color){
+		boolean isCheckmate = true;
+		for(int j = 0; j < squares.length && isCheckmate; j++){
+			if(squares[j].getPiece().getColor().equals(color)){
+				Model.Piece piece = squares[j].getPiece();
+				piece.setPossibleMoves();
+				checkSecondaryPieceMoves(piece);
+				ArrayList<Integer> checkingMoves = (ArrayList<Integer>) this.checkingMoves.clone();
+				for(int i = 0; i < checkingMoves.size() && isCheckmate; i++){
+					Model.Piece startPiece = piece;
+					int startLocation = piece.getCurrentLocation();
+					int moveLocation = checkingMoves.get(i);
+					Model.Piece secondPiece = squares[moveLocation].getPiece();
+					squares[piece.getCurrentLocation()].setPiece(new Model.Piece("unoccupied space", '-'));
+					squares[piece.getCurrentLocation()].setIsOccupied(false);
+					squares[moveLocation].setPiece(startPiece);
+					squares[moveLocation].setIsOccupied(true);
+					piece.setCurrentLocation(moveLocation);
+					if(!isCheck('k', color)){
+						isCheckmate = false;
+					}
+					squares[startLocation].setPiece(startPiece);
+					squares[startLocation].setIsOccupied(true);
+					piece.setCurrentLocation(startLocation);
+					squares[moveLocation].setPiece(secondPiece);
+					if(secondPiece.getColor().equals("unoccupied space")){
+						squares[moveLocation].setIsOccupied(false);
+					}else{
+						squares[moveLocation].setIsOccupied(true);
+					}
 				}
 			}
 		}
+		return isCheckmate;
 	}
 
 	private void checkJumpMoves(int pieceLocation, int squareLocation, ArrayList<Integer> arrayList){
@@ -139,20 +167,20 @@ public class CheckMove {
 		float checkSeven = ((pieceLocation - squareLocation)/(float)7);
 		if(checkNine%1==0){
 			offset = 9;
-			checkOffset = offset;
+			
 			isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			if(!isDiagonalPath){
 				offset = -9;
-				checkOffset = offset;
+				
 				isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}else if(checkSeven%1==0){
 			offset = -7;
-			checkOffset = offset;
+			
 			isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			if(!isDiagonalPath){
 				offset = 7;
-				checkOffset = offset;
+				
 				isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}
@@ -164,22 +192,22 @@ public class CheckMove {
 		int offset;
 		if(squareLocation%MOD_VALUE == pieceLocation%MOD_VALUE){
 			offset = -8;
-			checkOffset = offset;
+			
 			isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			if(!isStraightPath){
 				offset = 8;
-				checkOffset = offset;
+				
 				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}else if(Math.floor(pieceLocation/8) == Math.floor(squareLocation/8)){
 			if(squareLocation > pieceLocation){
 				offset = -1;
-				checkOffset = offset;
+				
 				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 
 			}else{
 				offset = 1;
-				checkOffset = offset;
+				
 				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}
@@ -188,9 +216,6 @@ public class CheckMove {
 
 	private boolean checkTruePath(int peiceLocation, int squareLocation, int offset){
 		boolean isTruePath = true;
-		if(squareLocation == 9 && offset == 7){
-			System.out.println(squareLocation%MOD_VALUE + " < " +  peiceLocation%MOD_VALUE);
-		}
 		if(offset==-9 && squareLocation%MOD_VALUE < peiceLocation%MOD_VALUE){
 			isTruePath = false;
 		}else if(offset==9 && squareLocation%MOD_VALUE>peiceLocation%MOD_VALUE){
@@ -229,23 +254,23 @@ public class CheckMove {
 
 	public void checkSpecialAttacks(Model.Piece piece, int pieceLocation, int squareLocation, ArrayList<Integer> arrayList){
 		if(piece.getColor().equals("white")){
-			if(squareLocation+16 == pieceLocation && !squares[squareLocation].getIsOccupied()){
+			if(squareLocation+16 == pieceLocation && !squares[squareLocation].getIsOccupied() && !squares[squareLocation+8].getIsOccupied()){
 				arrayList.add(squareLocation);
 			}else if(squareLocation+8 == pieceLocation && !squares[squareLocation].getIsOccupied()){
 				arrayList.add(squareLocation);
-			}else if(squareLocation+7 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("black")){
+			}else if(squareLocation+7 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("black") && squareLocation%MOD_VALUE>pieceLocation%MOD_VALUE){
 				arrayList.add(squareLocation);
-			}else if(squareLocation+9 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("black")){
+			}else if(squareLocation+9 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("black") && squareLocation%MOD_VALUE<pieceLocation%MOD_VALUE){
 				arrayList.add(squareLocation);
 			}
 		}else if(piece.getColor().equals("black")){
-			if(squareLocation-16 == pieceLocation && !squares[squareLocation].getIsOccupied()){
+			if(squareLocation-16 == pieceLocation && !squares[squareLocation].getIsOccupied() && !squares[squareLocation-8].getIsOccupied()){
 				arrayList.add(squareLocation);
 			}else if(squareLocation-8 == pieceLocation && !squares[squareLocation].getIsOccupied()){
 				arrayList.add(squareLocation);
-			}else if(squareLocation-7 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("white")){
+			}else if(squareLocation-7 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("white")  && squareLocation%MOD_VALUE<pieceLocation%MOD_VALUE){
 				arrayList.add(squareLocation);
-			}else if(squareLocation-9 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("white")){
+			}else if(squareLocation-9 == pieceLocation && squares[squareLocation].getPiece().getColor().equals("white")  && squareLocation%MOD_VALUE>pieceLocation%MOD_VALUE){
 				arrayList.add(squareLocation);
 			}
 		}
@@ -293,11 +318,11 @@ public class CheckMove {
 	private boolean checkHorizontalCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 1;
-		checkOffset = offset;
+		
 		isCheck = checkHorizontalForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -1; 
-			checkOffset = offset;
+			
 			isCheck = checkHorizontalForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -335,11 +360,11 @@ public class CheckMove {
 	private boolean checkVerticalCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 8;
-		checkOffset = offset;
+		
 		isCheck = checkVerticalForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -8; 
-			checkOffset = offset;
+			
 			isCheck = checkVerticalForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -375,11 +400,11 @@ public class CheckMove {
 	private boolean checkDiagonalRightCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 9;
-		checkOffset = offset;
+		
 		isCheck = checkDiagonalRightForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -7; 
-			checkOffset = offset;
+			
 			isCheck = checkDiagonalRightForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -416,11 +441,11 @@ public class CheckMove {
 	private boolean checkDiagonalLeftCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 7;
-		checkOffset = offset;
+		
 		isCheck = checkDiagonalLeftForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -9; 
-			checkOffset = offset;
+			
 			isCheck = checkDiagonalLeftForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -457,41 +482,41 @@ public class CheckMove {
 	private boolean checkCanJumpCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 6;
-		checkOffset = offset;
+		
 		isCheck = checkCanJumpForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -6; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 10; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -10; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 15; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -15; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 17; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -17; 
-			checkOffset = offset;
+			
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -516,5 +541,23 @@ public class CheckMove {
 			}
 		}
 		return isCheck;
+	}
+	
+	public Model.Piece promotePawn(Model.Piece piece){
+		Model.Piece tempPiece = piece;
+		if(piece.getSymbol() == 'p' || piece.getSymbol() == 'P'){
+			if(piece.getColor().equals("white")){
+				if(piece.getCurrentLocation() < 8){
+					tempPiece = new Model.Queen("white", 'Q');
+					tempPiece.setImage(new Image("View/Images/WhiteQueen.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
+			}else if(piece.getColor().equals("black")){
+				if(piece.getCurrentLocation() > 55){
+					tempPiece = new Model.Queen("black", 'q');
+					tempPiece.setImage(new Image("View/Images/BlackQueen.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
+			}
+		}
+		return tempPiece;
 	}
 }

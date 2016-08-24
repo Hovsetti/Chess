@@ -2,6 +2,8 @@ package Model;
 
 import java.util.ArrayList;
 
+import javafx.scene.image.Image;
+
 public class Piece {
 	protected final int ROW_SIZE = 8;
 	protected String color;
@@ -18,7 +20,16 @@ public class Piece {
 	protected final int MOVE_ONE = 1;
 	protected boolean canMoveDiagonalEveryTurn = false;
 	protected boolean canMoveStraightEveryTurn = false;
+	protected Image image;
 	
+	public Image getImage() {
+		return image;
+	}
+
+	public void setImage(Image image) {
+		this.image = image;
+	}
+
 	public Piece(String color, char symbol){
 		this.color = color;
 		this.symbol = symbol;

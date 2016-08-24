@@ -27,7 +27,7 @@ public class Board {
 		for(int j = 0; j < BOARD_SIZE/8; j++){
 			file = 'a';
 			for(int w = 0; w < BOARD_SIZE/8; w++){
-				squares[arrayIndex] = new Model.Square(""+file+rank);
+				squares[arrayIndex] = new Model.Square(""+file+rank, arrayIndex);
 				arrayIndex++;
 				file++;
 			}
@@ -68,7 +68,11 @@ public class Board {
 						squares[j] = movePiece(endPosition, squares[j]);
 						currentPlayer = turnHandler.changTurn();
 						if(checkMove.isCheck('k', turnHandler.getCurrentPlayer())){
-							System.out.println(turnHandler.getCurrentPlayer() + " player's King is in check");
+							if(checkMove.isCheckmate(currentPlayer)){
+								System.out.println(turnHandler.getCurrentPlayer()+ " player's King is in check mate");
+							}else{
+								System.out.println(turnHandler.getCurrentPlayer() + " player's King is in check");
+							}
 						}else{
 							System.out.println(turnHandler.getCurrentPlayer() + " player's King is safe");
 						}

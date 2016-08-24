@@ -10,11 +10,15 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.scene.image.Image;
+
 public class FileIo {
 
 	private InputStream in;
 	private ArrayList<String> actions;
 	private View.Board board;
+	private static final int SCREEN_WIDTH = 512;
+	private static final int SCREEN_HEIGHT = 512;
 
 	public FileIo(String fileName){
 		try {
@@ -214,16 +218,9 @@ public class FileIo {
 		private void assignSquareValues(String space, char color, char symbol){
 			boolean keepRunning = true;
 			Model.Square[] squares = board.getSquares();
-			Model.Piece piece = setStartingPiece(symbol);
+			Model.Piece piece = setStartingPiece(symbol, color);
 			for(int j = 0; j < squares.length && keepRunning; j++){
 				if(squares[j].getSpace().equals(space)){
-					if(color == 'd'){
-						piece.setColor("black");
-						piece.setSymbol(Character.toLowerCase(symbol));
-					}else{
-						piece.setColor("white");
-						piece.setSymbol(Character.toUpperCase(symbol));
-					}
 					piece.setCurrentLocation(j);
 					squares[j].setPiece(piece);
 					squares[j].setIsOccupied(true);
@@ -233,26 +230,80 @@ public class FileIo {
 			board.setSquares(squares);
 		}
 		
-		private Model.Piece setStartingPiece(char symbol){
+		private Model.Piece setStartingPiece(char symbol, char color){
 			Model.Piece piece = new Model.Piece("unocupied space", '-');
 			switch(symbol){
 			case 'Q':
 				piece = new Model.Queen("unocupied space", '-');
+				if(color == 'd'){
+					piece.setColor("black");
+					piece.setSymbol(Character.toLowerCase(symbol));
+					piece.setImage(new Image("View/Images/BlackQueen.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}else{
+					piece.setColor("white");
+					piece.setSymbol(Character.toUpperCase(symbol));
+					piece.setImage(new Image("View/Images/WhiteQueen.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
 				break;
 			case 'K':
 				piece = new Model.King("unocupied space", '-');
+				if(color == 'd'){
+					piece.setColor("black");
+					piece.setSymbol(Character.toLowerCase(symbol));
+					piece.setImage(new Image("View/Images/BlackKing.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}else{
+					piece.setColor("white");
+					piece.setSymbol(Character.toUpperCase(symbol));
+					piece.setImage(new Image("View/Images/WhiteKing.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
 				break;
 			case 'P':
 				piece = new Model.Pawn("unocupied space", '-');
+				if(color == 'd'){
+					piece.setColor("black");
+					piece.setSymbol(Character.toLowerCase(symbol));
+					piece.setImage(new Image("View/Images/BlackPawn.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}else{
+					piece.setColor("white");
+					piece.setSymbol(Character.toUpperCase(symbol));
+					piece.setImage(new Image("View/Images/WhitePawn.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
 				break;
 			case 'R':
 				piece = new Model.Rook("unocupied space", '-');
+				if(color == 'd'){
+					piece.setColor("black");
+					piece.setSymbol(Character.toLowerCase(symbol));
+					piece.setImage(new Image("View/Images/BlackRook.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}else{
+					piece.setColor("white");
+					piece.setSymbol(Character.toUpperCase(symbol));
+					piece.setImage(new Image("View/Images/WhiteRook.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
 				break;
 			case 'N':
 				piece = new Model.Knight("unocupied space", '-');
+				if(color == 'd'){
+					piece.setColor("black");
+					piece.setSymbol(Character.toLowerCase(symbol));
+					piece.setImage(new Image("View/Images/BlackKnight.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}else{
+					piece.setColor("white");
+					piece.setSymbol(Character.toUpperCase(symbol));
+					piece.setImage(new Image("View/Images/WhiteKnight.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
 				break;
 			case 'B':
 				piece = new Model.Bishop("unocupied space", '-');
+				if(color == 'd'){
+					piece.setColor("black");
+					piece.setSymbol(Character.toLowerCase(symbol));
+					piece.setImage(new Image("View/Images/BlackBishop.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}else{
+					piece.setColor("white");
+					piece.setSymbol(Character.toUpperCase(symbol));
+					piece.setImage(new Image("View/Images/WhiteBishop.png", SCREEN_WIDTH/16, SCREEN_HEIGHT/16, false, false));
+				}
 				break;
 			}
 			return piece;
