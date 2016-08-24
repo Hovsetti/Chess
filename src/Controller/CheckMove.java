@@ -88,7 +88,9 @@ public class CheckMove {
 			squares[possibleMoves.get(j)].setIsOccupied(true);
 			piece.setCurrentLocation(possibleMoves.get(j));
 			if(!isCheck('k', piece.getColor())){
-				finalMoves.add(squares[possibleMoves.get(j)].getSpace());
+				if(!finalMoves.contains(squares[possibleMoves.get(j)].getSpace())){
+					finalMoves.add(squares[possibleMoves.get(j)].getSpace());
+				}
 			}
 			squares[startLocation].setPiece(startPiece);
 			squares[startLocation].setIsOccupied(true);
@@ -101,7 +103,7 @@ public class CheckMove {
 			}
 		} 
 	}
-	
+
 	public boolean isCheckmate(String color){
 		boolean isCheckmate = true;
 		for(int j = 0; j < squares.length && isCheckmate; j++){
@@ -167,20 +169,20 @@ public class CheckMove {
 		float checkSeven = ((pieceLocation - squareLocation)/(float)7);
 		if(checkNine%1==0){
 			offset = 9;
-			
+
 			isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			if(!isDiagonalPath){
 				offset = -9;
-				
+
 				isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}else if(checkSeven%1==0){
 			offset = -7;
-			
+
 			isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			if(!isDiagonalPath){
 				offset = 7;
-				
+
 				isDiagonalPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}
@@ -192,22 +194,22 @@ public class CheckMove {
 		int offset;
 		if(squareLocation%MOD_VALUE == pieceLocation%MOD_VALUE){
 			offset = -8;
-			
+
 			isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			if(!isStraightPath){
 				offset = 8;
-				
+
 				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}else if(Math.floor(pieceLocation/8) == Math.floor(squareLocation/8)){
 			if(squareLocation > pieceLocation){
 				offset = -1;
-				
+
 				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 
 			}else{
 				offset = 1;
-				
+
 				isStraightPath = checkTruePath(pieceLocation, squareLocation, offset);
 			}
 		}
@@ -233,7 +235,10 @@ public class CheckMove {
 		}else if(offset==-1 && Math.floor(squareLocation/MOD_VALUE) != Math.floor(peiceLocation/MOD_VALUE)){
 			isTruePath = false;
 		}else if(squares[peiceLocation].getPiece().getSymbol() == 'k' || squares[peiceLocation].getPiece().getSymbol() == 'K'){
-			if((peiceLocation%MOD_VALUE)+(squareLocation%MOD_VALUE)==7){
+			if(peiceLocation%MOD_VALUE == 0 && squareLocation%MOD_VALUE == 7){
+				isTruePath = false;
+			}
+			if(peiceLocation%MOD_VALUE == 7 && squareLocation%MOD_VALUE == 0){
 				isTruePath = false;
 			}
 		}
@@ -318,11 +323,11 @@ public class CheckMove {
 	private boolean checkHorizontalCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 1;
-		
+
 		isCheck = checkHorizontalForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -1; 
-			
+
 			isCheck = checkHorizontalForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -360,11 +365,11 @@ public class CheckMove {
 	private boolean checkVerticalCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 8;
-		
+
 		isCheck = checkVerticalForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -8; 
-			
+
 			isCheck = checkVerticalForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -400,11 +405,11 @@ public class CheckMove {
 	private boolean checkDiagonalRightCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 9;
-		
+
 		isCheck = checkDiagonalRightForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -7; 
-			
+
 			isCheck = checkDiagonalRightForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -441,11 +446,11 @@ public class CheckMove {
 	private boolean checkDiagonalLeftCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 7;
-		
+
 		isCheck = checkDiagonalLeftForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -9; 
-			
+
 			isCheck = checkDiagonalLeftForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -482,41 +487,41 @@ public class CheckMove {
 	private boolean checkCanJumpCheck(int startPosition){
 		boolean isCheck = false;
 		int offset = 6;
-		
+
 		isCheck = checkCanJumpForOffset(startPosition, offset);
 		if(!isCheck){
 			offset = -6; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 10; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -10; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 15; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -15; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = 17; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		if(!isCheck){
 			offset = -17; 
-			
+
 			isCheck = checkCanJumpForOffset(startPosition, offset);
 		}
 		return isCheck;
@@ -542,7 +547,7 @@ public class CheckMove {
 		}
 		return isCheck;
 	}
-	
+
 	public Model.Piece promotePawn(Model.Piece piece){
 		Model.Piece tempPiece = piece;
 		if(piece.getSymbol() == 'p' || piece.getSymbol() == 'P'){

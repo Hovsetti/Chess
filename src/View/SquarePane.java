@@ -18,7 +18,6 @@ import javafx.scene.layout.StackPane;
 public class SquarePane extends StackPane{
 
 	private Model.Square square;
-	private Controller.TurnHandler turnHandler = new Controller.TurnHandler();
 	private Controller.CheckMove checkMove;
 	private SquarePane[] panes;
 	private String location;
@@ -37,10 +36,12 @@ public class SquarePane extends StackPane{
 			@Override
 			public void handle(MouseEvent t) {
 				if(!gridPane.pieceSelected()){
-					peiceMouseEvent();
-					gridPane.setSavePane(thisPane);
-					gridPane.setSaveSquare(square);
-					gridPane.setPieceSelected(true);
+					if(square.getPiece().getColor().equals(gridPane.getCurrentPlayer())){
+						peiceMouseEvent();
+						gridPane.setSavePane(thisPane);
+						gridPane.setSaveSquare(square);
+						gridPane.setPieceSelected(true);
+					}
 				}else{
 					for(int j = 0; j < checkMove.getFinalMoves().size(); j++){
 						if(location.equals(checkMove.getFinalMoves().get(j))){
@@ -59,8 +60,20 @@ public class SquarePane extends StackPane{
 							gridPane.getSavePane().setChild();
 							gridPane.getSaveSquare().setIsOccupied(false);
 							square.setPiece(checkMove.promotePawn(square.getPiece()));
+							square.getPiece().setCurrentLocation(square.getLocation());
 							removeChild();
 							setChild();
+							gridPane.changeTurn();
+							if(checkMove.isCheck('k', gridPane.getCurrentPlayer())){
+								if(checkMove.isCheckmate(gridPane.getCurrentPlayer())){
+									System.out.println(gridPane.getCurrentPlayer()+ " player's King is in check mate");
+
+								}else{
+									System.out.println(gridPane.getCurrentPlayer() + " player's King is in check");
+								}
+							}else{
+								System.out.println(gridPane.getCurrentPlayer() + " player's King is safe");
+							}
 						}else{
 							for(int i = 0; i < panes.length; i++){
 								panes[i].square.getPiece().clearPossibleMoves();
@@ -72,18 +85,9 @@ public class SquarePane extends StackPane{
 					}
 					checkMove.clearFinalMoves();
 					gridPane.setPieceSelected(false);
-					if(checkMove.isCheck('k', turnHandler.getCurrentPlayer())){
-						if(checkMove.isCheckmate(turnHandler.getCurrentPlayer())){
-							System.out.println(turnHandler.getCurrentPlayer()+ " player's King is in check mate");
-							
-						}else{
-							System.out.println(turnHandler.getCurrentPlayer() + " player's King is in check");
-						}
-					}else{
-						System.out.println(turnHandler.getCurrentPlayer() + " player's King is safe");
-					}
 				}
 			}
+
 		});
 	}
 

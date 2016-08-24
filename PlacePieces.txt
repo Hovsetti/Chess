@@ -6,8 +6,14 @@
     Blf1
     Nlg1
     Rlh1
-    Plb6
-    Plg6
+    Pla2
+    Plb2
+    Plc2
+    Pld2
+    Ple2
+    Plf2
+    Plg2
+    Plh2
   
     Rda8
     Ndb8
@@ -18,5 +24,11 @@
     Ndg8
     Rdh8
     Pda7
+    Pdb7
+    Pdc7
+    Pdd7
+    Pde7
+    Pdf7
+    Pdg7
     Pdh7
   

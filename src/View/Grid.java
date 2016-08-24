@@ -7,6 +7,8 @@ public class Grid extends GridPane{
 	private boolean pieceSelected = false;
 	private Model.Square saveSquare = null;
 	private SquarePane savePane = null;
+	private Controller.TurnHandler turnHandler = new Controller.TurnHandler();
+	private String currentPlayer = turnHandler.getCurrentPlayer();
 
 	public SquarePane getSavePane() {
 		return savePane;
@@ -30,5 +32,13 @@ public class Grid extends GridPane{
 	
 	public void setSaveSquare(Model.Square saveSquare){
 		this.saveSquare = saveSquare;
+	}
+
+	public String getCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	public void changeTurn() {
+		this.currentPlayer = turnHandler.changTurn();
 	}
 }
